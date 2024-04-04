@@ -7,7 +7,7 @@ export default function TrackingEquipment() {
     useEffect(() => {
         dispatch(fetchTrackingData());
     }, [])
-    const trackings = useSelector(state => state.tracking)
+    const trackings = useSelector(state => state.tracking);
     return (
         <div className='ml-20 mt-3'>
             <div className="overflow-x-auto rounded-lg border border-gray-200">
