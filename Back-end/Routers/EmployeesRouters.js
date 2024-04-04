@@ -17,4 +17,15 @@ router.post('/api/createEmployee', async (req, res) => {
 })
 
 
+router.get('/api/allEmployees', async (req, res) => {
+    try {
+        const employees = await employeeModels.getAllEmployees();
+        res.status(200).json(employees);
+    } catch (error) {
+        console.error('Failed to get all employees:', error);
+        res.status(500).json({ error: 'Failed to retrieve employees' });
+    }
+});
+
+
 module.exports = router;

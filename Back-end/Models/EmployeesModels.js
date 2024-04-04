@@ -13,6 +13,16 @@ async function createEmployee(data) {
 }
 
 // get all employees :
+
+async function getAllEmployees() {
+    try {
+        const [rows] = await pool.query('SELECT * FROM employees');
+        return rows;
+    } catch (error) {
+        console.error('Failed to get all employees:', error);
+        throw error; // Rethrow the error for handling by the calling code
+    }
+}
 // get employee By id:
 // delete Employee : 
 // update Employee : 
@@ -20,5 +30,6 @@ async function createEmployee(data) {
 
 
 module.exports = {
-    createEmployee
+    createEmployee,
+    getAllEmployees
 };
