@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchEmployeeData } from '../Redux/EmployeeSlice'
+import { fetchEquipmentData } from '../Redux/EquipmentSlice'
+import { fetchAtelierData } from '../Redux/AtelierSlice'
 export default function AddTracking() {
     const dispatch = useDispatch()
+
+    const fetchAll = async ()=>{
+        await dispatch(fetchEmployeeData())
+        await dispatch(fetchEquipmentData())
+        await dispatch(fetchAtelierData())
+    }
     useEffect(() => {
-        dispatch(fetchEmployeeData());
+        fetchAll()
     }, [])
     const employees = useSelector(state => state.employees);
-    console.log(employees.data)
+    const equipments = useSelector(state => state.equipments);
+    const ateliers = useSelector(state => state.ateliers)
     return (
         <div className='ml-20 mt-3'>
             <form >
@@ -25,7 +34,7 @@ export default function AddTracking() {
                                         autoComplete="country-name"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                     >
-                                        <option disabled>Select A Name</option>
+                                        <option >Select A Name</option>
                                         {
                                             employees.loading ? <h1>loading ...</h1> :
                                                 employees.error ? <h1>{employees.error}</h1> :
@@ -75,9 +84,17 @@ export default function AddTracking() {
                                         autoComplete="country-name"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                     >
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Mexico</option>
+                                        <option>Select code</option>
+                                        {
+                                            equipments.loading ? <h1>Loading ...</h1>:
+                                            equipments.error ? <h1>{equipments.error}</h1>:
+                                            equipments.data && equipments.data.map(equipment =>{
+                                                return(
+
+                                                    <option value={equipment.id} key={equipment.id}>{equipment.code}</option>
+                                                )
+                                            })
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -93,9 +110,17 @@ export default function AddTracking() {
                                         autoComplete="country-name"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                     >
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Mexico</option>
+                                        <option>Select Equipment</option>
+                                        {
+                                            equipments.loading ? <h1>Loading ...</h1>:
+                                            equipments.error ? <h1>{equipments.error}</h1>:
+                                            equipments.data && equipments.data.map(equipment =>{
+                                                return(
+
+                                                    <option value={equipment.id} key={equipment.id}>{equipment.equipment_name}</option>
+                                                )
+                                            })
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -111,9 +136,17 @@ export default function AddTracking() {
                                         autoComplete="country-name"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                     >
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Mexico</option>
+                                        <option>Select Atelier</option>
+                                        {
+                                            ateliers.loading ? <h1>Loading ...</h1>:
+                                            ateliers.error ? <h1>{ateliers.error}</h1>:
+                                            ateliers.data && ateliers.data.map(atelier =>{
+                                                return(
+
+                                                    <option value={atelier.id} key={atelier.id}>{atelier.atelier_name}</option>
+                                                )
+                                            })
+                                        }
                                     </select>
                                 </div>
                             </div>

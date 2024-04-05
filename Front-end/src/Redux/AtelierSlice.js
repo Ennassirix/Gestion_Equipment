@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchAtelierData = createAsyncThunk('ateliers/fetchAtelierData', async () => {
     try {
-        const res = await axios.get('http://localhost:3001/tracks/api/getAllTrack', { withCredentials: true })
+        const res = await axios.get('http://localhost:3001/atelier/api/allAtelier', { withCredentials: true })
         return res.data;
     } catch (error) {
         return error.message;
@@ -17,7 +17,7 @@ export const fetchAtelierData = createAsyncThunk('ateliers/fetchAtelierData', as
 })
 
 const atelieSlice = createSlice({
-    name: 'tracking',
+    name: 'ateliers',
     initialState,
     extraReducers(builder) {
         builder.addCase(fetchAtelierData.pending, (state) => {

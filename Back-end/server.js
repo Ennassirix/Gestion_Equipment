@@ -4,6 +4,8 @@ const port = 3001;
 const cors = require('cors')
 const employeeRouter = require('./Routers/EmployeesRouters');
 const trackRouter = require('./Routers/TrackEquipments')
+const equipmentRouter = require('./Routers/EquipmentsRoutes');
+const atelierRouter = require('./Routers/AtelierRoutes')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
@@ -20,6 +22,12 @@ app.use('/employees', employeeRouter);
 
 // track Router : 
 app.use('/tracks', trackRouter);
+
+// equipment Router :
+app.use('/equipment',equipmentRouter);
+
+// atelier Router :
+app.use("/atelier",atelierRouter);
 
 
 app.listen(port, () => {

@@ -10,8 +10,19 @@ export default function TrackingEquipment() {
     const trackings = useSelector(state => state.tracking);
     return (
         <div className='ml-20 mt-3'>
+            <div  className='mb-5'>
+                <h1>Filter : </h1>
+                <form action="" className=''>
+                    <label htmlFor="">code</label>
+                    <input type="text" />
+                    <label htmlFor="">name</label>
+                    <input type="text" />
+                    <button className='rounded-md bg-green-300 px-3 ml-2'>Search</button>
+                </form>
+            </div>
+                
             <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border ">
                     <thead className="ltr:text-left rtl:text-right">
                         <tr>
                             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">code</th>
@@ -42,6 +53,15 @@ export default function TrackingEquipment() {
                     </tbody>
                 </table>
             </div>
+            <button
+                        type="submit"
+                        className="rounded-md bg-red-600 px-3 py-2 text-sm 
+                        font-semibold text-white shadow-sm hover:bg-red-500 
+                        focus-visible:outline focus-visible:outline-2 
+                        focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4"
+                    >
+                        Download
+                    </button>
         </div>
     )
 }

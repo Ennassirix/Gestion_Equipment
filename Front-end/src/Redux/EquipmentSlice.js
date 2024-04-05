@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchEquipmentData = createAsyncThunk('equipments/fetchEquipmentData', async () => {
     try {
-        const res = await axios.get('http://localhost:3001/tracks/api/getAllTrack', { withCredentials: true })
+        const res = await axios.get('http://localhost:3001/equipment/api/getAllEquipments', { withCredentials: true })
         return res.data;
     } catch (error) {
         return error.message;
