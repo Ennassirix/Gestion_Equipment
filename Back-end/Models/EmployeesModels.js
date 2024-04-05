@@ -24,12 +24,32 @@ async function getAllEmployees() {
     }
 }
 // get employee By id:
-// delete Employee : 
+async function getAllEmployeeByID(id) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM employees WHERE employee_id = ?',[id]);
+        return rows;
+    } catch (error) {
+        console.error('Failed to get an employees by id:', error);
+        throw error; // Rethrow the error for handling by the calling code
+    }
+}
+// delete Employee :
+async function deleteAnEmployee(id){
+    try {
+        const [rows] = await pool.query("DELETE FROM employees WHERE employee_id = ?",[id])
+        return rows;
+    } catch (error) {
+        console.error('Failed to get an employees by id:', error);
+        
+    }
+}
 // update Employee : 
 
 
 
 module.exports = {
     createEmployee,
-    getAllEmployees
+    getAllEmployees,
+    getAllEmployeeByID,
+    deleteAnEmployee
 };

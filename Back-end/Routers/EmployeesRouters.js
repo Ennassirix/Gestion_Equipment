@@ -27,5 +27,25 @@ router.get('/api/allEmployees', async (req, res) => {
     }
 });
 
+router.get('/api/employee/:id', async (req, res) => {
+    try {
+        const id = req.params.id; // Access id from req.params
+        const employee = await employeeModels.getAllEmployeeByID(id);
+        res.status(200).json(employee); // 200 for success
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ error: 'Failed to get employee by id' });
+    }
+});
+
+router.delete('/api/employee/:id',(req,res)=>{
+    try {
+        const id = req.params.id;
+        const employee = employeeModels.deleteAnEmployee(id);
+        res.status(500).json(employee)
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get delete an employee' })
+    }
+})
 
 module.exports = router;
