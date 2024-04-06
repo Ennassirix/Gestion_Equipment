@@ -5,7 +5,6 @@ import { fetchEquipmentData } from '../Redux/EquipmentSlice'
 import { fetchAtelierData } from '../Redux/AtelierSlice'
 export default function AddTracking() {
     const dispatch = useDispatch()
-
     const fetchAll = async ()=>{
         await dispatch(fetchEmployeeData())
         await dispatch(fetchEquipmentData())
@@ -18,7 +17,7 @@ export default function AddTracking() {
     const equipments = useSelector(state => state.equipments);
     const ateliers = useSelector(state => state.ateliers)
     return (
-        <div className='ml-20 mt-3'>
+        <div className='ml-20 p-3'>
             <form >
                 <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-12">

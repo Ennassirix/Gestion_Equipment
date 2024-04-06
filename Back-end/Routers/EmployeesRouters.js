@@ -9,7 +9,7 @@ router.post('/api/createEmployee', async (req, res) => {
             last_name: req.body.last_name
         }
         const employees = await employeeModels.createEmployee(data)
-        res.status(201).json(employees);
+        res.status(200).json(employees);
     } catch (error) {
         console.error('Failed to create an Employee');
         res.status(500).json({ error: 'Failed to create an employee' });
@@ -38,13 +38,29 @@ router.get('/api/employee/:id', async (req, res) => {
     }
 });
 
-router.delete('/api/employee/:id',(req,res)=>{
+// delete
+router.delete('/api/employee/:id',async (req,res)=>{
     try {
         const id = req.params.id;
-        const employee = employeeModels.deleteAnEmployee(id);
+        const employee = await employeeModels.deleteAnEmployee(id);
         res.status(500).json(employee)
     } catch (error) {
-        res.status(500).json({ error: 'Failed to get delete an employee' })
+        res.status(500).json({ error: 'Failed to delete an employee' })
+    }
+})
+
+// update 
+router.put('/api/employee/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = {
+            employee_name : req.body.employee_name,
+            last_name: req.body.last_name
+        }
+        const employee = await employeeModels.updateAnEmployee(data,id);
+        res.status(500).json(employee)
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update an employee' })
     }
 })
 

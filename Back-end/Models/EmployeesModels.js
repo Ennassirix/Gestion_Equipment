@@ -34,22 +34,35 @@ async function getAllEmployeeByID(id) {
     }
 }
 // delete Employee :
-async function deleteAnEmployee(id){
+async function deleteAnEmployee(id) {
     try {
-        const [rows] = await pool.query("DELETE FROM employees WHERE employee_id = ?",[id])
-        return rows;
+        const result = await pool.query("DELETE FROM employees WHERE employee_id = ?", [id]);
+        return result.affectedRows; // Return the number of affected rows
     } catch (error) {
-        console.error('Failed to get an employees by id:', error);
-        
+        console.error('Failed to delete an employee by id:', error);
+        throw error; // Rethrow the error for handling by the calling code
     }
 }
-// update Employee : 
 
+// update Employee :
+
+async function updateAnEmployee(data,id) {
+    try {
+        const { employee_name, last_name } = data
+        const [rows] = await pool.query('UPDATE employees SET employee_name = ?, last_name = ? WHERE employee_id = ?',
+            [employee_name, last_name, id])
+        return rows;
+    } catch (error) {
+        console.error('Failed to update an employees by id:', error);
+
+    }
+}
 
 
 module.exports = {
     createEmployee,
     getAllEmployees,
     getAllEmployeeByID,
-    deleteAnEmployee
+    deleteAnEmployee,
+    updateAnEmployee
 };

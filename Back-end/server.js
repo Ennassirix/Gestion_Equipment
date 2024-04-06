@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
     origin: ['http://localhost:5173'],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
 }))
 app.get('/', (req, res) => {
     res.send('work');
@@ -24,10 +24,10 @@ app.use('/employees', employeeRouter);
 app.use('/tracks', trackRouter);
 
 // equipment Router :
-app.use('/equipment',equipmentRouter);
+app.use('/equipment', equipmentRouter);
 
 // atelier Router :
-app.use("/atelier",atelierRouter);
+app.use("/atelier", atelierRouter);
 
 
 app.listen(port, () => {
