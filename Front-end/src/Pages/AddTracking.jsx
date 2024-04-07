@@ -5,7 +5,7 @@ import { fetchEquipmentData } from '../Redux/EquipmentSlice'
 import { fetchAtelierData } from '../Redux/AtelierSlice'
 export default function AddTracking() {
     const dispatch = useDispatch()
-    const fetchAll = async ()=>{
+    const fetchAll = async () => {
         await dispatch(fetchEmployeeData())
         await dispatch(fetchEquipmentData())
         await dispatch(fetchAtelierData())
@@ -85,14 +85,14 @@ export default function AddTracking() {
                                     >
                                         <option>Select code</option>
                                         {
-                                            equipments.loading ? <h1>Loading ...</h1>:
-                                            equipments.error ? <h1>{equipments.error}</h1>:
-                                            equipments.data && equipments.data.map(equipment =>{
-                                                return(
+                                            equipments.loading ? <h1>Loading ...</h1> :
+                                                equipments.error ? <h1>{equipments.error}</h1> :
+                                                    equipments.data && equipments.data.map(equipment => {
+                                                        return (
 
-                                                    <option value={equipment.id} key={equipment.id}>{equipment.code}</option>
-                                                )
-                                            })
+                                                            <option value={equipment.id} key={equipment.id}>{equipment.code}</option>
+                                                        )
+                                                    })
                                         }
                                     </select>
                                 </div>
@@ -111,14 +111,14 @@ export default function AddTracking() {
                                     >
                                         <option>Select Equipment</option>
                                         {
-                                            equipments.loading ? <h1>Loading ...</h1>:
-                                            equipments.error ? <h1>{equipments.error}</h1>:
-                                            equipments.data && equipments.data.map(equipment =>{
-                                                return(
+                                            equipments.loading ? <h1>Loading ...</h1> :
+                                                equipments.error ? <h1>{equipments.error}</h1> :
+                                                    equipments.data && equipments.data.map(equipment => {
+                                                        return (
 
-                                                    <option value={equipment.id} key={equipment.id}>{equipment.equipment_name}</option>
-                                                )
-                                            })
+                                                            <option value={equipment.id} key={equipment.id}>{equipment.equipment_name}</option>
+                                                        )
+                                                    })
                                         }
                                     </select>
                                 </div>
@@ -137,14 +137,14 @@ export default function AddTracking() {
                                     >
                                         <option>Select Atelier</option>
                                         {
-                                            ateliers.loading ? <h1>Loading ...</h1>:
-                                            ateliers.error ? <h1>{ateliers.error}</h1>:
-                                            ateliers.data && ateliers.data.map(atelier =>{
-                                                return(
+                                            ateliers.loading ? <h1>Loading ...</h1> :
+                                                ateliers.error ? <h1>{ateliers.error}</h1> :
+                                                    ateliers.data && ateliers.data.map(atelier => {
+                                                        return (
 
-                                                    <option value={atelier.id} key={atelier.id}>{atelier.atelier_name}</option>
-                                                )
-                                            })
+                                                            <option value={atelier.id} key={atelier.id}>{atelier.atelier_name}</option>
+                                                        )
+                                                    })
                                         }
                                     </select>
                                 </div>

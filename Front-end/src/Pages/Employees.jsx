@@ -4,9 +4,7 @@ import { fetchEmployeeData } from '../Redux/EmployeeSlice'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from 'react-router-dom';
-import DialogDelete from '../Components/DialogDelete';
 export default function Employees() {
-    const [employeeUi, setemployeeUi] = useState([])
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchEmployeeData())
@@ -18,7 +16,7 @@ export default function Employees() {
     const [error, setError] = useState('')
     const [showPopUp, setShowPopUp] = useState(false);
     const [errorPopUp, setErrorPopUp] = useState(false)
-    const [delteteDialog, setDelteteDialog] = useState(false)
+    const [update, setUpdate] = useState(false)
     const handelSubmit = async e => {
         e.preventDefault()
         if (name === '') {
@@ -47,7 +45,6 @@ export default function Employees() {
         }
     }
     // delete an employee
-    const navigate = useNavigate()
     const handleDelete = async (id) => {
         if (window.confirm('are u sure')) {
             try {
@@ -59,7 +56,7 @@ export default function Employees() {
                 // Optionally, you can show an error message to the user or handle the error in another way
             }
         }
-        
+
     };
     return (
         <div>
@@ -73,7 +70,7 @@ export default function Employees() {
                 </span>
                 {
                     showPopUp && (
-                        <div role="alert" className="rounded-xl border border-gray-100 bg-white p-4">
+                        <div role="alert" className="rounded-xl border border-gray-100 p-4 bg-green-200">
                             <div className="flex items-start gap-4">
                                 <span className="text-green-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-6 w-6">
@@ -176,7 +173,9 @@ export default function Employees() {
                                         employees.data && employees.data.map(employee => {
                                             return (
                                                 <tr key={employee.employee_id} className='divide-y divide-gray-200'>
-                                                    <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 uppercase">{employee.employee_name}</td>
+                                                    <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 uppercase">
+                                                        {employee.employee_name}
+                                                    </td>
                                                     <td className="whitespace-nowrap px-4 py-2 text-gray-700 uppercase">{employee.last_name}</td>
                                                     <td className="whitespace-nowrap px-4 py-2">
                                                         <a
@@ -205,7 +204,7 @@ export default function Employees() {
                         </div>
                     )
                 }
-                
+
             </div>
         </div>
     )

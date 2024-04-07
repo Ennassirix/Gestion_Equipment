@@ -66,8 +66,8 @@ export default function Dashboard() {
                                     </Link>
                                 </li>
                                 <li className='pb-5'>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/equipments"
                                         className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='w-5 text-neutral-500'>
@@ -79,11 +79,11 @@ export default function Dashboard() {
                                         >
                                             Equipment
                                         </span>
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/atelier"
                                         className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" className='w-5'>
@@ -94,7 +94,7 @@ export default function Dashboard() {
                                         >
                                             Atelier
                                         </span>
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
