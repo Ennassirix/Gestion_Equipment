@@ -43,8 +43,7 @@ export default function TrackingEquipment() {
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                         {
-                            trackings.loading ? <h1>Loading ...</h1> :
-                                trackings.error ? <h1>{trackings.error}</h1> :
+                            
                                     trackings.data && trackings.data.map(tracking => {
                                         return (
                                             <tr key={tracking.id}>

@@ -5,23 +5,27 @@ const trackModels = require('../Models/TrackEquipmentsModels');
 
 router.post('/api/createTrack', async (req, res) => {
     try {
-        const data = {
-            equipment_id: req.body.equipment_id,
-            employee_id: req.body.employee_id,
-            atelier_id: req.body.atelier_id,
-            date_issued: req.body.date_issued,
-            quantity_issued: req.body.quantity_issued
+        // Validate request data
+        const { equipment_id, employee_id, atelier_id, quantity_issued } = req.body;
+        if (!equipment_id || !employee_id || !atelier_id || !quantity_issued) {
+            return res.status(400).json({ error: 'Missing required fields' });
         }
-        const tracks = await trackModels.createEquipmentTrack(data);
-        res.status(201).json(tracks);
+
+        // Create track
+        const data = { equipment_id, employee_id, atelier_id, quantity_issued };
+        const track = await trackModels.createEquipmentTrack(data);
+
+        // Send success response
+        res.status(200).json(track);
     } catch (error) {
-        console.error('Failed to create an Track');
-        res.status(500).json({ error: 'Failed to create an Track' });
+        console.error('Failed to create a Track:', error);
+        res.status(500).json({ error: 'Failed to create a Track', details: error.message });
     }
-})
+});
 
 
-router.get('/api/getAllTrack', async (req,res) => {
+
+router.get('/api/getAllTrack', async (req, res) => {
     try {
         const tracks = await trackModels.getAllTracks();
         res.status(201).json(tracks);

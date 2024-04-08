@@ -3,22 +3,88 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchEmployeeData } from '../Redux/EmployeeSlice'
 import { fetchEquipmentData } from '../Redux/EquipmentSlice'
 import { fetchAtelierData } from '../Redux/AtelierSlice'
+import axios from "axios";
+import SuccessPopUp from '../Components/SuccessPopUp'
+import ErrorPopUp from '../Components/ErrorPopUp'
 export default function AddTracking() {
     const dispatch = useDispatch()
     const fetchAll = async () => {
-        await dispatch(fetchEmployeeData())
-        await dispatch(fetchEquipmentData())
-        await dispatch(fetchAtelierData())
-    }
+        try {
+            await dispatch(fetchEmployeeData());
+            await dispatch(fetchEquipmentData());
+            await dispatch(fetchAtelierData());
+        } catch (error) {
+            console.error('Failed to fetch all data:', error);
+        }
+    };
     useEffect(() => {
         fetchAll()
     }, [])
     const employees = useSelector(state => state.employees);
     const equipments = useSelector(state => state.equipments);
     const ateliers = useSelector(state => state.ateliers)
+    // handeleSubmit
+    const [employee, setEmployee] = useState('')
+    const [equipment, setEquipment] = useState('')
+    const [atelier, setAtelier] = useState('')
+    const [quantity, setQauntity] = useState('')
+    const [error, setError] = useState('')
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [errorPopUp, setErrorPopUp] = useState(false)
+    const handeleSubmet = async e => {
+        e.preventDefault()
+        try {
+            if (employee === '') {
+                setError('sélectionnez le nom dun employé')
+                setErrorPopUp(true)
+            } else if (equipment === '') {
+                setError('sélectionnez un equipment')
+                setErrorPopUp(true)
+            } else if (atelier === '') {
+                setError('sélectionnez un atelier')
+                setErrorPopUp(true)
+            } else if (quantity === '') {
+                setError('la quantité ne doit pas être vide')
+                setErrorPopUp(true)
+            } else {
+                try {
+                    const res = await axios.post('http://localhost:3001/tracks/api/createTrack',
+                        {
+                            equipment_id: equipment,
+                            employee_id: employee,
+                            atelier_id: atelier,
+                            quantity_issued: quantity
+                        })
+                    if (res.status === 200) {
+                        setShowPopUp(true)
+                        setErrorPopUp(false)
+                        setAtelier('')
+                        setEmployee('')
+                        setQauntity('')
+                        setEquipment('')
+                    } else {
+                        setError('Check quantity')
+                    }
+                } catch (error) {
+                    console.error(error)
+                    setError('check qts')
+                    setErrorPopUp(true)
+                }
+            }
+        } catch (error) {
+            setError('Check qts')
+            setErrorPopUp(true)
+        }
+    }
     return (
         <div className='ml-20 p-3'>
-            <form >
+            {
+                showPopUp && <SuccessPopUp/>
+            }
+            {
+                errorPopUp && <ErrorPopUp error={error}/>
+            }
+            <form onSubmit={handeleSubmet}>
                 <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-12">
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
@@ -28,6 +94,8 @@ export default function AddTracking() {
                                 </label>
                                 <div className="mt-2">
                                     <select
+                                        onChange={e => setEmployee(e.target.value)}
+                                        value={employee}
                                         id="country"
                                         name="country"
                                         autoComplete="country-name"
@@ -35,68 +103,17 @@ export default function AddTracking() {
                                     >
                                         <option >Select A Name</option>
                                         {
-                                            employees.loading ? <h1>loading ...</h1> :
-                                                employees.error ? <h1>{employees.error}</h1> :
-                                                    employees.data && employees.data.map(employee => {
-                                                        return (
-                                                            <option value={employee.employee_id} key={employee.employee_id}>{employee.employee_name}</option>
-                                                        )
-                                                    })
+
+                                            employees.data && employees.data.map(employee => {
+                                                return (
+                                                    <option value={employee.employee_id} key={employee.employee_id}>{employee.employee_name}</option>
+                                                )
+                                            })
                                         }
                                     </select>
                                 </div>
                             </div>
 
-                            {/* <div className="sm:col-span-3">
-                                <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Last Name
-                                </label>
-                                <div className="mt-2">
-                                    <select
-                                        id="country"
-                                        name="country"
-                                        autoComplete="country-name"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                    >
-                                        <option>Select A Name</option>
-                                        {
-                                            employees.loading ? <h1>loading ...</h1> :
-                                                employees.error ? <h1>{employees.error}</h1> :
-                                                    employees.data && employees.data.map(employee => {
-                                                        return (
-                                                            <option value={employee.employee_id} key={employee.employee_id}>{employee.last_name}</option>
-                                                        )
-                                                    })
-                                        }
-                                    </select>
-                                </div>
-                            </div> */}
-
-                            <div className="sm:col-span-4">
-                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Code
-                                </label>
-                                <div className="mt-2">
-                                    <select
-                                        id="country"
-                                        name="country"
-                                        autoComplete="country-name"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                    >
-                                        <option>Select code</option>
-                                        {
-                                            equipments.loading ? <h1>Loading ...</h1> :
-                                                equipments.error ? <h1>{equipments.error}</h1> :
-                                                    equipments.data && equipments.data.map(equipment => {
-                                                        return (
-
-                                                            <option value={equipment.id} key={equipment.id}>{equipment.code}</option>
-                                                        )
-                                                    })
-                                        }
-                                    </select>
-                                </div>
-                            </div>
 
                             <div className="sm:col-span-3">
                                 <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
@@ -104,6 +121,8 @@ export default function AddTracking() {
                                 </label>
                                 <div className="mt-2">
                                     <select
+                                        onChange={e => setEquipment(e.target.value)}
+                                        value={equipment}
                                         id="country"
                                         name="country"
                                         autoComplete="country-name"
@@ -111,14 +130,13 @@ export default function AddTracking() {
                                     >
                                         <option>Select Equipment</option>
                                         {
-                                            equipments.loading ? <h1>Loading ...</h1> :
-                                                equipments.error ? <h1>{equipments.error}</h1> :
-                                                    equipments.data && equipments.data.map(equipment => {
-                                                        return (
 
-                                                            <option value={equipment.id} key={equipment.id}>{equipment.equipment_name}</option>
-                                                        )
-                                                    })
+                                            equipments.data && equipments.data.map(equipment => {
+                                                return (
+
+                                                    <option value={equipment.equipment_id} key={equipment.equipment_id}>{equipment.equipment_name}</option>
+                                                )
+                                            })
                                         }
                                     </select>
                                 </div>
@@ -130,6 +148,8 @@ export default function AddTracking() {
                                 </label>
                                 <div className="mt-2">
                                     <select
+                                        onChange={e => setAtelier(e.target.value)}
+                                        value={atelier}
                                         id="country"
                                         name="country"
                                         autoComplete="country-name"
@@ -137,40 +157,25 @@ export default function AddTracking() {
                                     >
                                         <option>Select Atelier</option>
                                         {
-                                            ateliers.loading ? <h1>Loading ...</h1> :
-                                                ateliers.error ? <h1>{ateliers.error}</h1> :
-                                                    ateliers.data && ateliers.data.map(atelier => {
-                                                        return (
 
-                                                            <option value={atelier.id} key={atelier.id}>{atelier.atelier_name}</option>
-                                                        )
-                                                    })
+                                            ateliers.data && ateliers.data.map(atelier => {
+                                                return (
+
+                                                    <option value={atelier.atelier_id} key={atelier.atelier_id}>{atelier.atelier_name}</option>
+                                                )
+                                            })
                                         }
                                     </select>
                                 </div>
                             </div>
-
-                            <div className="sm:col-span-2">
-                                <label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">
-                                    date_issued
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        type="date"
-                                        name="region"
-                                        id="region"
-                                        autoComplete="address-level1"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    />
-                                </div>
-                            </div>
-
                             <div className="sm:col-span-2">
                                 <label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">
-                                    quantity_issued
+                                    quantity
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        onChange={e => setQauntity(e.target.value)}
+                                        value={quantity}
                                         type="number"
                                         name="postal-code"
                                         id="postal-code"
