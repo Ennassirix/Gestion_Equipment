@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import store from './Redux/Store.js'
 import Atetlier from './Pages/Atetlier.jsx'
 import Equipments from './Pages/Equipments.jsx'
+import UpdateEquipment from './Pages/UpdateEquipment.jsx'
 
 
 
@@ -25,7 +26,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path='/trackingList' element={<TrackingEquipment />} />
             <Route path='/addTracking' element={<AddTracking />} />
             <Route path='/atelier' element={<Atetlier/>} />
-            <Route path='/equipments' element={<Equipments/>} />
+            <Route path='/equipments' element={<Equipments />} />
+            <Route path='/equiment/update/:id' element={<UpdateEquipment/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

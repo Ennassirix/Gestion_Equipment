@@ -17,7 +17,7 @@ export const fetchEquipmentData = createAsyncThunk('equipments/fetchEquipmentDat
 })
 
 const equipmentSlice = createSlice({
-    name: 'tracking',
+    name: 'equipments',
     initialState,
     extraReducers(builder) {
         builder.addCase(fetchEquipmentData.pending, (state) => {

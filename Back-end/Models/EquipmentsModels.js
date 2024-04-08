@@ -45,7 +45,7 @@ async function getAllEquipment() {
 // get by id
 async function getAnEquipmentByID(id) {
     try {
-        const [rows] = await pool.query('SELECT * FROM equipment WHERE equipment_id = ?', [id])
+        const [rows] = await pool.query('SELECT * FROM equipment WHERE equipment_id = ? LIMIT 1 ', [id])
         return rows;
     } catch (error) {
         console.log('Failed to get an equipment by id');

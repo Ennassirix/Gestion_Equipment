@@ -3,6 +3,7 @@ import TrackingSlice from "./TrackingSlice";
 import EmployeeSlice from "./EmployeeSlice";
 import AtelierSlice from "./AtelierSlice";
 import EquipmentSlice from "./EquipmentSlice";
+import SingleEquipmentSlice from "./SingleEquipmentSlice";
 
 
 const store = configureStore({
@@ -10,7 +11,8 @@ const store = configureStore({
         tracking: TrackingSlice,
         employees: EmployeeSlice,
         ateliers: AtelierSlice,
-        equipments : EquipmentSlice
+        equipments: EquipmentSlice,
+        singleEquipment : SingleEquipmentSlice
     }
 })
 

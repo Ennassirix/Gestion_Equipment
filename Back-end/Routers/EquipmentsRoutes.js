@@ -46,7 +46,7 @@ route.put('/api/equipment/:id', async (req, res) => {
         }
         const id = req.params.id
         const equipments = await equipmentModel.updateAnEquipment(data, id)
-        res.status(201).json(equipments)
+        res.status(200).json(equipments)
     } catch (error) {
         res.status(500).json('Failed to update an equipments')
     }
