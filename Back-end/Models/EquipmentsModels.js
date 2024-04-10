@@ -36,7 +36,7 @@ async function getAllEquipment() {
     try {
         const [rows] = await pool.query('SELECT * from equipment ORDER BY equipment.equipment_name ASC ');
         return rows
-            
+
     } catch (error) {
         console.log('Failed to get all equipment model')
 

@@ -77,7 +77,7 @@ export default function AddTracking() {
         }
     }
     return (
-        <div className='ml-20 p-3'>
+        <div className='ml-20 p-3 bg-gray-100 h-screen'>
             {
                 showPopUp && <SuccessPopUp/>
             }

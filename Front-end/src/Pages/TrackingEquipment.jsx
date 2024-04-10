@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTrackingData } from '../Redux/TrackingSlice'
-// import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 // execel 
-// const exportToExcel = () => {
-//     const table = document.getElementById('atelierTable');
-//     const ws = XLSX.utils.table_to_sheet(table);
-//     const wb = XLSX.utils.book_new();
-//     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-//     XLSX.writeFile(wb, 'atelier_data.xlsx');
-// };
+const exportToExcel = () => {
+    const table = document.getElementById('trackingTable');
+    const ws = XLSX.utils.table_to_sheet(table);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'tracking_data.xlsx');
+};
 export default function TrackingEquipment() {
     const dispatch = useDispatch()
     useEffect(() => {
@@ -17,20 +17,9 @@ export default function TrackingEquipment() {
     }, [])
     const trackings = useSelector(state => state.tracking);
     return (
-        <div className='ml-20 mt-3'>
-            <div className='mb-5'>
-                <h1>Filter : </h1>
-                <form action="" className=''>
-                    <label htmlFor="">code</label>
-                    <input type="text" />
-                    <label htmlFor="">name</label>
-                    <input type="text" />
-                    <button className='rounded-md bg-green-300 px-3 ml-2'>Search</button>
-                </form>
-            </div>
-
+        <div className='ml-20 pt-3 h-screen'>
             <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border ">
+                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border " id='trackingTable'>
                     <thead className="ltr:text-left rtl:text-right">
                         <tr>
                             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">code</th>
@@ -61,6 +50,7 @@ export default function TrackingEquipment() {
                 </table>
             </div>
             <button
+                onClick={() => exportToExcel()}
                 type="submit"
                 className="rounded-md bg-red-600 px-3 py-2 text-sm 
                         font-semibold text-white shadow-sm hover:bg-red-500 
