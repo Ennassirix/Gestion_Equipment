@@ -35,6 +35,22 @@ router.get('/api/getAllTrack', async (req, res) => {
     }
 })
 
+router.post('/api/filter', async (req, res) => { // Changed to POST method
+    try {
+        const data = {
+            equipment_id: req.body.equipment_id,
+            employee_id: req.body.employee_id,
+            atelier_id: req.body.atelier_id,
+            date_issued: req.body.date_issued
+        };
+
+        const tracks = await trackModels.searchTracks(data);
+        res.json(tracks);
+    } catch (error) {
+        console.error('Failed to filter tracks:', error); // Log the error for debugging
+        res.status(500).json({ error: 'Failed to filter tracks' });
+    }
+});
 
 
 

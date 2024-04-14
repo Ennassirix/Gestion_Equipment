@@ -35,8 +35,39 @@ async function getAllTracks() {
     }
 }
 
+async function searchTracks(data) {
+    try {
+        const { equipment_id, employee_id, atelier_id, date_issued } = data;
+        let sql = 'SELECT * FROM trackequipment WHERE equipment_id = ?';
+        const values = [equipment_id]; // Start with equipment_id as the only value
+
+        if (employee_id) {
+            sql += ' AND employee_id = ?';
+            values.push(employee_id);
+        }
+        if (atelier_id) {
+            sql += ' AND atelier_id = ?';
+            values.push(atelier_id);
+        }
+        if (date_issued) {
+            sql += ' AND date_issued BETWEEN ? AND ?';
+            // Assuming date_issued is an array containing [startDate, endDate]
+            values.push(date_issued[0]); // Start date
+            values.push(date_issued[1]); // End date
+        }
+        
+        const [results] = await pool.query(sql, values);
+        return results;
+
+    } catch (error) {
+        console.error('Failed to filter all Tracks', error);
+        throw error; // Throw the error to handle it outside this function
+    }
+}
+
 
 module.exports = {
     createEquipmentTrack,
-    getAllTracks
+    getAllTracks,
+    searchTracks
 }

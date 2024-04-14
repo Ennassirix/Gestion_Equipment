@@ -15,13 +15,22 @@ async function getAllAtelier() {
 // get atelier by id
 async function getAtelierByID(id) {
     try {
-        const [rows] = await pool.query('SELECT * FROM atelier WHERE atelier_id =  ?', [id])
-        return rows
-    } catch (error) {
-        console.log('Failed to get an atelier');
+        const [rows] = await pool.query('SELECT * FROM atelier WHERE atelier_id =  ? LIMIT 1', [id]);
 
+        // Transform the database row into the desired format
+        const atelierData = {
+            id: rows[0].atelier_id,
+            name: rows[0].atelier_name,
+            // Add other properties as needed
+        };
+
+        return atelierData;
+    } catch (error) {
+        console.error('Failed to get atelier by ID:', error);
+        throw error; // Rethrow the error for handling by the calling code
     }
 }
+
 // add atelier
 async function createAnAtelier(data) {
     try {

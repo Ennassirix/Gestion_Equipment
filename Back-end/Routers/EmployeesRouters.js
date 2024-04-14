@@ -58,7 +58,7 @@ router.put('/api/employee/:id', async (req, res) => {
             last_name: req.body.last_name
         }
         const employee = await employeeModels.updateAnEmployee(data,id);
-        res.status(500).json(employee)
+        res.status(200).json(employee)
     } catch (error) {
         res.status(500).json({ error: 'Failed to update an employee' })
     }

@@ -15,7 +15,8 @@ async function createAnEquipment(data) {
 async function updateAnEquipment(data, id) {
     try {
         const { code, equipment_name, quantity_available } = data
-        const [rows] = await pool.query('UPDATE equipment SET code = ?, equipment_name = ?, quantity_available= ? WHERE equipment_id = ?', [code, equipment_name, quantity_available, id])
+        const [rows] = await pool.query('UPDATE equipment SET code = ?, equipment_name = ?, quantity_available= ? WHERE equipment_id = ?',
+            [code, equipment_name, quantity_available, id])
         return rows.affectedRows
     } catch (error) {
         console.log('Failed to update an equipment')

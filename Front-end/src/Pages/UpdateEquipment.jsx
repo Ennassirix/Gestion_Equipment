@@ -17,11 +17,10 @@ export default function UpdateEquipment() {
     useEffect(() => {
         dispatch(fetchSingleEquipmentData(id))
     }, [dispatch,id])
-    const singleEquipment = useSelector(state => state.singleEquipment.data[0])
-    console.log(singleEquipment)
-    const [equipmentName, setEquipmentName] = useState(singleEquipment && singleEquipment.equipment_name);
-    const [quantity, setQuantity] = useState(singleEquipment && singleEquipment.quantity_available);
-    const [code, setCode] = useState(singleEquipment && singleEquipment.code);
+    const singleEquipment = useSelector(state => state.singleEquipment.data)
+    const [equipmentName, setEquipmentName] = useState(singleEquipment[0] && singleEquipment[0].equipment_name);
+    const [quantity, setQuantity] = useState(singleEquipment[0] && singleEquipment[0].quantity_available);
+    const [code, setCode] = useState(singleEquipment[0] && singleEquipment[0].code);
     const handelSubmit = async e => {
         e.preventDefault()
         if (code === '') {

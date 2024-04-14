@@ -26,7 +26,7 @@ async function getAllEmployees() {
 // get employee By id:
 async function getAllEmployeeByID(id) {
     try {
-        const [rows] = await pool.query('SELECT * FROM employees WHERE employee_id = ?',[id]);
+        const [rows] = await pool.query('SELECT * FROM employees WHERE employee_id = ? ',[id]);
         return rows;
     } catch (error) {
         console.error('Failed to get an employees by id:', error);
