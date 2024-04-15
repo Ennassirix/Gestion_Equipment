@@ -4,6 +4,7 @@ const trackModels = require('../Models/TrackEquipmentsModels');
 
 
 router.post('/api/createTrack', async (req, res) => {
+    const date = new Date(); // Create a new Date object
     try {
         // Validate request data
         const { equipment_id, employee_id, atelier_id, quantity_issued } = req.body;
@@ -12,7 +13,7 @@ router.post('/api/createTrack', async (req, res) => {
         }
 
         // Create track
-        const data = { equipment_id, employee_id, atelier_id, quantity_issued };
+        const data = { equipment_id, employee_id, atelier_id, date_issued: date, quantity_issued }; // Pass date_issued as date
         const track = await trackModels.createEquipmentTrack(data);
 
         // Send success response
@@ -22,6 +23,7 @@ router.post('/api/createTrack', async (req, res) => {
         res.status(500).json({ error: 'Failed to create a Track', details: error.message });
     }
 });
+
 
 
 
