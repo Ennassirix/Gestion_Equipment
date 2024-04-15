@@ -41,22 +41,39 @@ export default function TrackingEquipment() {
     const [atelier, setAtelier] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [filtredData, setFiltredData] = useState([])
+    let dateValue
+    if ((startDate && endDate) === '') {
+        dateValue = ''
+    } else {
+        dateValue = [startDate, endDate]
+    }
     const handeleFilter = async (e) => {
         e.preventDefault()
         try {
             const res = await axios.post('http://localhost:3001/tracks/api/filter',
                 {
-                    "equipment_id": equipment,
-                    "employee_id": employee,
-                    "atelier_id": atelier,
-                    "date_issued": [startDate, endDate]
-            })
-            console.log(res.data)
+                    equipment_id: equipment,
+                    employee_id: employee,
+                    atelier_id: atelier,
+                    date_issued: dateValue,
+
+                }
+            )
+            setFiltredData(res.data)
+            // console.log(res.data)
         } catch (error) {
             console.log(error)
         }
     }
-
+    // date : 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const month = date.getMonth() + 1; // Months are zero-based
+        const day = date.getDate();
+        const year = date.getFullYear();
+        return `${month}/${day}/${year}`;
+    }
     return (
         <div className='ml-20 pt-3 h-screen'>
             <h1>Filter : </h1>
@@ -89,8 +106,6 @@ export default function TrackingEquipment() {
                                     </select>
                                 </div>
                             </div>
-
-
                             <div className="sm:col-span-3">
                                 <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
                                     Equipment Name
@@ -177,7 +192,12 @@ export default function TrackingEquipment() {
                                 </div>
                             </div>
                             <div className="mt-6 flex items-center justify-center gap-x-6">
-
+                                <button
+                                    type="reset"
+                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Annuler
+                                </button>
                                 <button
                                     type="submit"
                                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -190,37 +210,69 @@ export default function TrackingEquipment() {
                 </div>
             </form>
             <hr />
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border " id='trackingTable'>
-                    <thead className="ltr:text-left rtl:text-right">
-                        <tr>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">code</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">equipment_name</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">atelier_name</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">employee_name</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">date_issued</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">quantity_issued</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {
+            {
+                filtredData.length === 0 ? (<div className="overflow-x-auto rounded-lg border border-gray-200">
+                    <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border " id='trackingTable'>
+                        <thead className="ltr:text-left rtl:text-right">
+                            <tr>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">code</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">equipment_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">atelier_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">employee_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">date_issued</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">quantity_issued</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {
 
-                            trackings.data && trackings.data.map(tracking => {
-                                return (
-                                    <tr key={tracking.id}>
-                                        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{tracking.code}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.equipment_name}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.atelier_name}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.employee_name}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.date_issued}</td>
-                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.quantity_issued}</td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                trackings.data && trackings.data.map(tracking => {
+                                    return (
+                                        <tr key={tracking.id}>
+                                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{tracking.code}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.equipment_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.atelier_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.employee_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.formatted_date_issued}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tracking.quantity_issued}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>) : (<div className="overflow-x-auto rounded-lg border border-gray-200">
+                    <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border " id='trackingTable'>
+                        <thead className="ltr:text-left rtl:text-right">
+                            <tr>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">code</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">equipment_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">atelier_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">employee_name</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">date_issued</th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">quantity_issued</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {
+
+                                filtredData && filtredData.map(filData => {
+                                    return (
+                                        <tr key={filData.id}>
+                                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{filData.code}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{filData.equipment_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{filData.atelier_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{filData.employee_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{filData.formatted_date_issued}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{filData.quantity_issued}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>)
+            }
             <button
                 onClick={() => exportToExcel()}
                 type="submit"
