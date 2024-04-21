@@ -29,18 +29,25 @@ export default function UpdateEquipment() {
         fetchData()
     }, [dispatch, id])
     const positions = useSelector(state => state.positions)
-    const [equipmentName, setEquipmentName] = useState(data && data[0].code.equipment_name);
-    const [quantity, setQuantity] = useState(data && data[0].code.quantity_available);
+    const [equipmentName, setEquipmentName] = useState('');
+    const [quantity, setQuantity] = useState('');
     const [code, setCode] = useState('');
-    const [ref, setRef] = useState(data && data[0].code.ref);
-    const [position, setPosition] = useState(data && data[0].code.position_name);
+    const [ref, setRef] = useState('');
+    const [position, setPosition] = useState('');
+
     const handelSubmit = async e => {
         e.preventDefault()
         if (code === '') {
             setError('le champ du code ne doit pas être vide')
             setErrorPopUp(true)
+        } else if (ref === '') {
+            setError('le champ du ref doit pas être vide')
+            setErrorPopUp(true)
         } else if (equipmentName === '') {
             setError('le champ du equipment nom ne doit pas être vide')
+            setErrorPopUp(true)
+        } else if (position === '') {
+            setError('le champ du position  ne doit pas être vide')
             setErrorPopUp(true)
         } else if (quantity === '') {
             setError('le champ du quantity ne doit pas être vide')
@@ -94,7 +101,7 @@ export default function UpdateEquipment() {
                                     onFocus={() => setShowPopUp(false)}
                                     type="text"
                                     name=""
-                                    
+
                                     id=""
                                     placeholder={data && data[0].code}
                                     autoComplete=""
