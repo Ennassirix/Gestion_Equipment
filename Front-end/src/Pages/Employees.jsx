@@ -14,33 +14,33 @@ export default function Employees() {
     const employees = useSelector(state => state.employees)
     // add an employee :
     const [name, setName] = useState('')
-    const [lastName, setLastName] = useState('')
     const [error, setError] = useState('')
     const [showPopUp, setShowPopUp] = useState(false);
     const [errorPopUp, setErrorPopUp] = useState(false)
-    const [update, setUpdate] = useState(false)
+    const navigate = useNavigate()
     const handelSubmit = async e => {
         e.preventDefault()
         if (name === '') {
             setError('le champ du nom ne doit pas être vide')
             setErrorPopUp(true)
-        } else if (lastName === '') {
-            setError('le champ du Prenom ne doit pas être vide')
-            setErrorPopUp(true)
-        } else {
+        }else {
             try {
-                const res = await axios.post('http://localhost:3001/employees/api/createEmployee', { employee_name: name, last_name: lastName })
+                const res = await axios.post('http://localhost:3001/employees/api/createEmployee', { employee_name: name})
                 if (res.status === 200) {
+                    dispatch(fetchEmployeeData());
                     setShowPopUp(true)
                     setErrorPopUp(false)
                     setName('')
                     setLastName('')
-                    dispatch(fetchEmployeeData());
+                    navigate('/employees')
                 } else {
-                    console.log('error')
+                    if (res.status === 500) {
+                        setError('le nom ne doit pas être dupliqué')
+                        setErrorPopUp(true)
+                    }
                 }
             } catch (error) {
-                setError('le nom ou le prenom ne doit pas être dupliqué')
+                setError('le nom ne doit pas être dupliqué')
                 setErrorPopUp(true)
             }
         }
@@ -95,22 +95,7 @@ export default function Employees() {
                         />
                     </div>
                 </div>
-                <div className="sm:col-span-3 mr-3">
-                    <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                        Prenom
-                    </label>
-                    <div className="mt-2">
-                        <input
-                            onChange={e => setLastName(e.target.value)}
-                            value={lastName}
-                            type="text"
-                            name=""
-                            id=""
-                            autoComplete=""
-                            className="block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                    </div>
-                </div>
+                
                 <div className="mt-6 flex items-center justify-start gap-x-6">
                     <button
                         type="reset"
@@ -137,7 +122,6 @@ export default function Employees() {
                             <thead className="">
                                 <tr>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Nom :</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Prenom :</th>
                                     <th className="px-4 py-2"></th>
                                     <th className="px-4 py-2"></th>
                                 </tr>
@@ -151,7 +135,6 @@ export default function Employees() {
                                                 <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 uppercase">
                                                     {employee.employee_name}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 uppercase">{employee.last_name}</td>
                                                 <td className="whitespace-nowrap px-4 py-2">
                                                     <Link
                                                         to={`/employees/update/${employee.employee_id}`}

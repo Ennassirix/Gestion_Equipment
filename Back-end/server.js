@@ -6,6 +6,7 @@ const employeeRouter = require('./Routers/EmployeesRouters');
 const trackRouter = require('./Routers/TrackEquipments')
 const equipmentRouter = require('./Routers/EquipmentsRoutes');
 const atelierRouter = require('./Routers/AtelierRoutes')
+const positionRouter = require('./Routers/PositionRouter')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
@@ -29,6 +30,8 @@ app.use('/equipment', equipmentRouter);
 // atelier Router :
 app.use("/atelier", atelierRouter);
 
+// position Router :
+app.use('/position',positionRouter)
 
 
 app.listen(port, () => {

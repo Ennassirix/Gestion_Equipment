@@ -1,11 +1,11 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchSingleEquipmentData } from '@/Redux/SingleEquipmentSlice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import ErrorPopUp from '@/Components/ErrorPopUp';
 import SuccessPopUp from '@/Components/SuccessPopUp';
 import axios from "axios";
+import { fetchPositionData } from '@/Redux/PositionSlice';
 
 export default function UpdateEquipment() {
     const { id } = useParams();
@@ -14,13 +14,26 @@ export default function UpdateEquipment() {
     const [showPopUp, setShowPopUp] = useState(false);
     const [errorPopUp, setErrorPopUp] = useState(false)
     const dispatch = useDispatch()
+    // data 
+    const [data, setData] = useState(null)
+    // fetch Data:
+    const fetchDataEquipment = async () => {
+        const res = await axios.get(`http://localhost:3001/equipment/api/getAnEquipment/${id}`)
+        setData(res.data)
+    }
+    const fetchData = async () => {
+        await dispatch(fetchPositionData())
+        await fetchDataEquipment()
+    }
     useEffect(() => {
-        dispatch(fetchSingleEquipmentData(id))
-    }, [dispatch,id])
-    const singleEquipment = useSelector(state => state.singleEquipment.data)
-    const [equipmentName, setEquipmentName] = useState(singleEquipment[0] && singleEquipment[0].equipment_name);
-    const [quantity, setQuantity] = useState(singleEquipment[0] && singleEquipment[0].quantity_available);
-    const [code, setCode] = useState(singleEquipment[0] && singleEquipment[0].code);
+        fetchData()
+    }, [dispatch, id])
+    const positions = useSelector(state => state.positions)
+    const [equipmentName, setEquipmentName] = useState(data && data[0].code.equipment_name);
+    const [quantity, setQuantity] = useState(data && data[0].code.quantity_available);
+    const [code, setCode] = useState('');
+    const [ref, setRef] = useState(data && data[0].code.ref);
+    const [position, setPosition] = useState(data && data[0].code.position_name);
     const handelSubmit = async e => {
         e.preventDefault()
         if (code === '') {
@@ -35,7 +48,13 @@ export default function UpdateEquipment() {
         } else {
             try {
                 const res = await axios.put(`http://localhost:3001/equipment/api/equipment/${id}`,
-                    { code: code, equipment_name: equipmentName, quantity_available: quantity })
+                    {
+                        code: code,
+                        ref: ref,
+                        equipment_name: equipmentName,
+                        quantity_available: quantity,
+                        position_name: position
+                    })
                 if (res.status === 200) {
                     setShowPopUp(true)
                     setErrorPopUp(false)
@@ -53,10 +72,10 @@ export default function UpdateEquipment() {
         }
     }
     return (
-        <div className="ml-20">
-            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-lg flex">
-                    <form action="#" className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8" onSubmit={handelSubmit}>
+        <div className="ml-20 pt-3">
+            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 h-screen">
+                <div className="mx-auto max-w-lg flex ">
+                    <form action="#" className="space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8 " onSubmit={handelSubmit}>
                         <p className="text-center text-lg font-medium">Edit </p>
                         {
                             errorPopUp && <ErrorPopUp error={error} />
@@ -68,15 +87,35 @@ export default function UpdateEquipment() {
                             <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
                                 Code
                             </label>
+                            <small className='text-gray-400'>ancien code : {data && data[0].code} </small>
                             <div className="mt-2">
                                 <input
                                     onChange={e => setCode(e.target.value)}
                                     onFocus={() => setShowPopUp(false)}
                                     type="text"
                                     name=""
-                                    value={code}
+                                    
                                     id=""
-                                    placeholder={code}
+                                    placeholder={data && data[0].code}
+                                    autoComplete=""
+                                    className="block md:w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3 mr-3">
+                            <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                Ref
+                            </label>
+                            <small className='text-gray-400'>ancien ref : {data && data[0].ref} </small>
+                            <div className="mt-2">
+                                <input
+                                    onChange={e => setRef(e.target.value)}
+                                    onFocus={() => setShowPopUp(false)}
+                                    type="text"
+                                    name=""
+                                    value={ref}
+                                    id=""
+                                    placeholder={data && data[0].ref}
                                     autoComplete=""
                                     className="block md:w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -86,6 +125,7 @@ export default function UpdateEquipment() {
                             <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900 capitalize">
                                 nom de l'équipement
                             </label>
+                            <small className='text-gray-400'>ancien nom : {data && data[0].equipment_name} </small>
                             <div className="mt-2">
                                 <input
                                     onChange={e => setEquipmentName(e.target.value)}
@@ -94,15 +134,39 @@ export default function UpdateEquipment() {
                                     name=""
                                     value={equipmentName}
                                     id=""
+                                    placeholder={data && data[0].equipment_name}
                                     autoComplete=""
                                     className="block md:w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
                         <div className="sm:col-span-3 mr-3">
+                            <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                Position
+                            </label>
+                            <small className='text-gray-400'>ancien position : {data && data[0].position_name} </small>
+                            <div className="mt-2">
+                                <select name="" id="" onChange={e => setPosition(e.target.value)}
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+
+                                >
+                                    <option value={data && data[0].position_name}>{data && data[0].position_name}</option>
+                                    {
+                                        positions.data && positions.data.map(position => {
+                                            return (
+                                                <option value={position.position_name} key={position.position_id}>{position.position_name}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3 mr-3">
                             <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900 capitalize">
                                 Quantité disponible
                             </label>
+                            <small className='text-gray-400'>ancien Quantité : {data && data[0].quantity_available} </small>
+
                             <div className="mt-2">
                                 <input
                                     onChange={e => setQuantity(e.target.value)}
@@ -111,6 +175,7 @@ export default function UpdateEquipment() {
                                     name=""
                                     value={quantity}
                                     id=""
+                                    placeholder={data && data[0].quantity_available}
                                     autoComplete=""
                                     className="block md:w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />

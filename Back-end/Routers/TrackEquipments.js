@@ -7,13 +7,14 @@ router.post('/api/createTrack', async (req, res) => {
     const date = new Date(); // Create a new Date object
     try {
         // Validate request data
-        const { equipment_id, employee_id, atelier_id, quantity_issued } = req.body;
-        if (!equipment_id || !employee_id || !atelier_id || !quantity_issued) {
+        const { code, ref, equipment_name, employee_name, atelier_name, position_name, quantity } = req.body;
+        if (!code || !ref || !equipment_name || !employee_name || !atelier_name || !position_name || !quantity) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
         // Create track
-        const data = { equipment_id, employee_id, atelier_id, date_issued: date, quantity_issued }; // Pass date_issued as date
+        const created_date = date.toISOString().slice(0, 19).replace('T', ' '); // Format the date
+        const data = { code, ref, equipment_name, employee_name, atelier_name, position_name, quantity, created_date };
         const track = await trackModels.createEquipmentTrack(data);
 
         // Send success response
@@ -23,7 +24,6 @@ router.post('/api/createTrack', async (req, res) => {
         res.status(500).json({ error: 'Failed to create a Track', details: error.message });
     }
 });
-
 
 
 
@@ -40,10 +40,10 @@ router.get('/api/getAllTrack', async (req, res) => {
 router.post('/api/filter', async (req, res) => { // Changed to POST method
     try {
         const data = {
-            equipment_id: req.body.equipment_id,
-            employee_id: req.body.employee_id,
-            atelier_id: req.body.atelier_id,
-            date_issued: req.body.date_issued
+            code: req.body.code,
+            employee_name: req.body.employee_name,
+            atelier_name: req.body.atelier_name,
+            created_date: req.body.created_date
         };
 
         const tracks = await trackModels.searchTracks(data);

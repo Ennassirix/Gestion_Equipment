@@ -15,6 +15,9 @@ import UpdateEquipment from './Pages/UpdateEquipment.jsx'
 import { AnimatePresence } from "framer-motion";
 import UpdateEmployees from './Pages/UpdateEmployees.jsx'
 import UpdateAtelier from './Pages/UpdateAtelier.jsx'
+import Position from './Pages/Position.jsx'
+import Notification from './Pages/Notification.jsx'
+import UpdateQuantity from './Pages/UpdateQuantity.jsx'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -31,9 +34,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path='/addTracking' element={<AddTracking />} />
               <Route path='/atelier' element={<Atetlier />} />
               <Route path='/equipments' element={<Equipments />} />
+              <Route path='/positions' element={<Position/>} />
               <Route path='/equiment/update/:id' element={<UpdateEquipment />} />
               <Route path='/employees/update/:id' element={<UpdateEmployees />} />
               <Route path='/atelier/update/:id' element={<UpdateAtelier/>} />
+              <Route path='/update/quantity/:id' element={<UpdateQuantity/>} />
+              <Route path='/notifications' element={<Notification/>} />
             </Route>
           </Routes>
         </BrowserRouter>

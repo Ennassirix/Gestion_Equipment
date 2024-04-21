@@ -6,7 +6,6 @@ import axios from "axios";
 
 export default function UpdateEmployees() {
     const { id } = useParams();
-    console.log(id)
     const [data, setData] = useState([])
     const fetchEmployee = async () => {
         try {
@@ -20,7 +19,6 @@ export default function UpdateEmployees() {
         fetchEmployee()
     }, [id])
     const [name, setName] = useState('')
-    const [lastName, setLastName] = useState('')
     // handele Submit
     const navigate = useNavigate()
     const [error, setError] = useState('')
@@ -31,25 +29,20 @@ export default function UpdateEmployees() {
         if (name === '') {
             setError('le champ du nom ne doit pas être vide')
             setErrorPopUp(true)
-        } else if (lastName === '') {
-            setError('le champ du prenom ne doit pas être vide')
-            setErrorPopUp(true)
         } else {
             try {
                 const res = await axios.put(`http://localhost:3001/employees/api/employee/${id}`,
-                    { employee_name: name, last_name : lastName })
+                    { employee_name: name })
                 if (res.status === 200) {
                     setShowPopUp(true)
                     setErrorPopUp(false)
-                    setName('')
-                    setLastName('')
                     navigate('/employees')
+                    setName('')
                 } else {
                     console.log('error')
                 }
             } catch (error) {
                 console.error(error)
-                setErrorPopUp(true)
             }
         }
     }
@@ -68,7 +61,7 @@ export default function UpdateEmployees() {
                         <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
                             Nom :
                         </label>
-                        <span className='text-sm'>Old name : {data[0] && data[0].employee_name}</span>
+                        <span className='text-sm'>ancien nom : {data[0] && data[0].employee_name}</span>
                         <div className="mt-2">
                             <input
                                 onChange={e => setName(e.target.value)}
@@ -82,24 +75,7 @@ export default function UpdateEmployees() {
                             />
                         </div>
                     </div>
-                    <div className="sm:col-span-3 mr-3">
-                        <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900 capitalize">
-                            Prenom
-                        </label>
-                        <span className='text-sm'>old last name {data[0] && data[0].last_name}</span>
-                        <div className="mt-2">
-                            <input
-                                onChange={e => setLastName(e.target.value)}
-                                onFocus={() => setShowPopUp(false)}
-                                type="text"
-                                name=""
-                                value={lastName}
-                                id=""
-                                autoComplete=""
-                                className="block md:w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
+                    
                     <div className="mt-6 flex items-center justify-start gap-x-6">
                         <button
                             type="submit"

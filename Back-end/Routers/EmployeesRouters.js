@@ -5,8 +5,7 @@ const employeeModels = require('../Models/EmployeesModels');
 router.post('/api/createEmployee', async (req, res) => {
     try {
         const data = {
-            employee_name: req.body.employee_name,
-            last_name: req.body.last_name
+            employee_name: req.body.employee_name
         }
         const employees = await employeeModels.createEmployee(data)
         res.status(200).json(employees);
@@ -39,7 +38,7 @@ router.get('/api/employee/:id', async (req, res) => {
 });
 
 // delete
-router.delete('/api/employee/:id',async (req,res)=>{
+router.delete('/api/employee/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const employee = await employeeModels.deleteAnEmployee(id);
@@ -54,10 +53,9 @@ router.put('/api/employee/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = {
-            employee_name : req.body.employee_name,
-            last_name: req.body.last_name
+            employee_name: req.body.employee_name
         }
-        const employee = await employeeModels.updateAnEmployee(data,id);
+        const employee = await employeeModels.updateAnEmployee(data, id);
         res.status(200).json(employee)
     } catch (error) {
         res.status(500).json({ error: 'Failed to update an employee' })

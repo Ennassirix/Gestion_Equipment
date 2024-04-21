@@ -1,89 +1,84 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAtelierData } from '../Redux/AtelierSlice'
 import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
+
 import SuccessPopUp from '../Components/SuccessPopUp';
 import ErrorPopUp from '../Components/ErrorPopUp';
-import { motion } from "framer-motion"
-export default function Atetlier() {
+import { fetchPositionData } from '@/Redux/PositionSlice';
+export default function Position() {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(fetchAtelierData())
+        dispatch(fetchPositionData())
     }, [dispatch])
-    const ateliers = useSelector(state => state.ateliers)
-    const [name, setName] = useState('')
+    const positions = useSelector(state => state.positions)
+
+    const [position, setPosition] = useState('')
     const [error, setError] = useState('')
     const [showPopUp, setShowPopUp] = useState(false);
     const [errorPopUp, setErrorPopUp] = useState(false)
-    const handelSubmit = async e => {
-        e.preventDefault()
-        if (name === '') {
-            setError('le champ du atelier nom ne doit pas être vide')
-            setErrorPopUp(true)
-        } else {
-            try {
-                const res = await axios.post('http://localhost:3001/atelier/api/createAtelier', { atelier_name: name })
-                if (res.status === 200) {
-                    setShowPopUp(true)
-                    setErrorPopUp(false)
-                    setName('')
-                    dispatch(fetchAtelierData());
-                } else {
-                    console.log('error')
-                }
-            } catch (error) {
-                console.error(error)
+    const handleSubmit = async e => {
+        e.preventDefault();
+        try {
+            if (position === '') {
+                setError('Le champ de position ne doit pas être vide')
                 setErrorPopUp(true)
+                setShowPopUp(false)
+            } else {
+                const res = await axios.post('http://localhost:3001/position/api/createPosition',
+                    {
+                        position_name: position
+                    }
+                )
+                if (res.status === 500) {
+                    setError('La position ne doit pas être dupliquée')
+                    setErrorPopUp(true)
+                    setShowPopUp(false)
+                } else {
+                    setErrorPopUp(false)
+                    setShowPopUp(true)
+                    dispatch(fetchPositionData())
+                    setPosition('')
+                }
             }
-        }
-    }
-    // handeledelete
-    const handeleDelete = async (id) => {
-        console.log(id)
-        if (window.confirm('are u sure')) {
-            try {
-                await axios.delete(`http://localhost:3001/atelier/api/atelier/${id}`);
-            } catch (error) {
-                console.error(error)
-            }
+        } catch (error) {
+            setError('La position ne doit pas être dupliquée')
+            setErrorPopUp(true)
+            setShowPopUp(false)
         }
     }
 
+
     return (
-        <motion.div className='ml-20 pt-3 h-screen'
-            initial={{ width: 0 }}
-            animate={{ width: 'auto' }}
-            exit={{ x: "100", opacity: 0 }}
-            transition={{ duration: 0.9 }}
-        >
+        <div className='ml-20 pt-3 h-screen'>
             <span className="flex items-center py-3">
-                <span className="pr-6 font-mono capitalize">ajouter des destination </span>
+                <span className="pr-6 font-mono capitalize">ajouter des position </span>
                 <span className="h-px flex-1 bg-black"></span>
             </span>
-            
             {
                 showPopUp && (
-                    <SuccessPopUp/>
+                    <SuccessPopUp />
                 )
             }
             {
                 errorPopUp && (
-                    <ErrorPopUp error={error}/>
+                    <ErrorPopUp error={error} />
                 )
             }
-            <form action="" className='md:flex sm:block ' onSubmit={handelSubmit} >
+
+            <form action="" className='md:flex sm:block ' onSubmit={handleSubmit} >
                 <div className="sm:col-span-3 mr-3">
                     <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                        Nom D'atelier
+                        position
                     </label>
                     <div className="mt-2">
                         <input
-                            onChange={e => setName(e.target.value)}
-                            onFocus={() => setShowPopUp(false)}
+                            onChange={e => setPosition(e.target.value)}
+                            onFocus={() => { setShowPopUp(false), setErrorPopUp(false) }}
                             type="text"
                             name=""
-                            value={name}
+                            value={position}
                             id=""
                             autoComplete=""
                             className="block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -105,13 +100,12 @@ export default function Atetlier() {
                     </button>
                 </div>
             </form>
-            
             <span className="flex items-center py-3">
-                <span className="pr-6 font-mono capitalize">liste des destinations </span>
+                <span className="pr-6 font-mono capitalize">liste des positions </span>
                 <span className="h-px flex-1 bg-black"></span>
             </span>
             {
-                ateliers.data.length !== 0 && (
+                positions.data.length !== 0 && (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm" id='atelierTable'>
                             <thead className="ltr:text-left rtl:text-right">
@@ -124,15 +118,15 @@ export default function Atetlier() {
 
                             <tbody className="divide-y divide-gray-200">
                                 {
-                                    ateliers.data && ateliers.data.map(atelier => {
+                                    positions.data && positions.data.map(position => {
                                         return (
-                                            <tr className="odd:bg-gray-50" key={atelier.atelier_id}>
-                                                <td className="whitespace-nowrap px-2 py-2 font-medium text-gray-900">{atelier.atelier_name}</td>
+                                            <tr className="odd:bg-gray-50" key={position.position_id}>
+                                                <td className="whitespace-nowrap px-2 py-2 font-medium text-gray-900">{position.position_name}</td>
                                                 <td className="whitespace-nowrap py-2 text-gray-700">
                                                     <button
                                                         className="inline-block rounded  px-1 py-1 text-white hover:text-blue-700"
                                                     >
-                                                        <Link to={`/atelier/update/${atelier.atelier_id}`}>
+                                                        <Link to={`/position/update/${position.position_id}`}>
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 fill="none" viewBox="0 0 24 24"
                                                                 strokeWidth="1.5" stroke="currentColor"
@@ -145,7 +139,7 @@ export default function Atetlier() {
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                                     <button
-                                                        onClick={() => handeleDelete(atelier.atelier_id)}
+                                                        onClick={() => handeleDelete(position.position_id)}
                                                         className="inline-block rounded  px-1 py-1 text-white hover:text-red-700"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +162,6 @@ export default function Atetlier() {
                     </div>
                 )
             }
-
-        </motion.div>
+        </div>
     )
 }

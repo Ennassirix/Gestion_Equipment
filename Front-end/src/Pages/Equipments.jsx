@@ -6,19 +6,26 @@ import * as XLSX from 'xlsx';
 import SuccessPopUp from '../Components/SuccessPopUp';
 import ErrorPopUp from '../Components/ErrorPopUp';
 import { Link } from 'react-router-dom';
+import { fetchPositionData } from '@/Redux/PositionSlice';
 
 
 
 export default function Equipments() {
     const dispatch = useDispatch()
+    const fatchData = async () => {
+        await dispatch(fetchEquipmentData())
+        await dispatch(fetchPositionData())
+    }
     useEffect(() => {
-        dispatch(fetchEquipmentData())
+        fatchData()
     }, [dispatch])
     const equipments = useSelector(state => state.equipments)
-
+    const positions = useSelector(state => state.positions)
     const [code, setCode] = useState('')
+    const [ref, setRef] = useState('')
     const [equipmentName, setEquipmentName] = useState('')
     const [quantity, setQuantity] = useState('')
+    const [position, setPosition] = useState('')
 
     const [error, setError] = useState('')
     const [showPopUp, setShowPopUp] = useState(false);
@@ -37,13 +44,21 @@ export default function Equipments() {
         } else {
             try {
                 const res = await axios.post('http://localhost:3001/equipment/api/equipment',
-                    { code: code, equipment_name: equipmentName, quantity_available: quantity })
+                    {
+                        code: code,
+                        ref: ref,
+                        equipment_name: equipmentName,
+                        quantity_available: quantity,
+                        position_name: position
+                    })
                 if (res.status === 200) {
                     setShowPopUp(true)
                     setErrorPopUp(false)
                     setCode('')
                     setEquipmentName('')
                     setQuantity('')
+                    setPosition('')
+                    setRef('')
                     dispatch(fetchEquipmentData());
                 } else {
                     console.log('error')
@@ -108,8 +123,25 @@ export default function Equipments() {
                     </div>
                 </div>
                 <div className="sm:col-span-3 mr-3">
+                    <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                        Ref
+                    </label>
+                    <div className="mt-2">
+                        <input
+                            onChange={e => setRef(e.target.value)}
+                            onFocus={() => setShowPopUp(false)}
+                            type="text"
+                            name=""
+                            value={ref}
+                            id=""
+                            autoComplete=""
+                            className="block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                    </div>
+                </div>
+                <div className="sm:col-span-3 mr-3">
                     <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900 capitalize">
-                        nom de l'équipement
+                        article
                     </label>
                     <div className="mt-2">
                         <input
@@ -122,6 +154,27 @@ export default function Equipments() {
                             autoComplete=""
                             className="block w-50 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
+                    </div>
+                </div>
+                <div className="sm:col-span-3 mr-3">
+                    <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                        Position
+                    </label>
+                    <div className="mt-2">
+                        <select name="" id=""
+                            onChange={e => setPosition(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+
+                        >
+                            <option value="">Select position</option>
+                            {
+                                positions.data && positions.data.map(position => {
+                                    return (
+                                        <option value={position.position_name} key={position.position_id}>{position.position_name}</option>
+                                    )
+                                })
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="sm:col-span-3 mr-3">
@@ -157,7 +210,7 @@ export default function Equipments() {
                 </div>
             </form>
 
-            
+
             <span className="flex items-center py-3">
                 <span className="pr-6 font-mono capitalize">List des equipments </span>
                 <span className="h-px flex-1 bg-black"></span>
@@ -168,8 +221,11 @@ export default function Equipments() {
                         <thead className="ltr:text-left rtl:text-right">
                             <tr>
                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 capitalize">Code :</th>
-                                <th className="whitespace-nowrap  py-2 font-medium text-gray-900 capitalize">nom de l'équipement </th>
+                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 capitalize">ref :</th>
+                                <th className="whitespace-nowrap  py-2 font-medium text-gray-900 capitalize">nom de l'équipement : </th>
+                                <th className="whitespace-nowrap  py-2 font-medium text-gray-900 capitalize">position : </th>
                                 <th className="whitespace-nowrap  py-2 font-medium text-gray-900 capitalize">quantity :</th>
+                                <th className="whitespace-nowrap  py-2 font-medium text-gray-900 capitalize">dernière mise à jour :</th>
                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 capitalize"></th>
                             </tr>
                         </thead>
@@ -180,8 +236,11 @@ export default function Equipments() {
                                     return (
                                         <tr key={equipment.equipment_id}>
                                             <td className="whitespace-nowrap px-5 py-2 font-medium text-gray-900">{equipment.code}</td>
+                                            <td className="whitespace-nowrap px-5 py-2 font-medium text-gray-900">{equipment.ref}</td>
                                             <td className="whitespace-nowrap px-5 py-2 text-gray-700">{equipment.equipment_name}</td>
-                                            <td className="whitespace-nowrap px-5 py-2 text-gray-700">{equipment.quantity_available}</td>
+                                            <td className="whitespace-nowrap px-5 py-2 text-gray-700">{equipment.position_name}</td>
+                                            <td className={`whitespace-nowrap px-5 py-2 text-gray-700 ${equipment.quantity_available < 5 && 'text-red-700'}`}>{equipment.quantity_available}</td>
+                                            <td className="whitespace-nowrap px-5 py-2 text-gray-700">{equipment.updated_date}</td>
                                             <td className="whitespace-nowrap px-5 py-2 text-gray-700">
                                                 {/* <DialogUpdate id={equipment.equipment_id} /> */}
                                                 <button className="inline-block rounded  px-1 py-1 mr-2 text-white hover:text-red-700">
@@ -217,7 +276,7 @@ export default function Equipments() {
                 </div>
             </div>
             <button
-                className="group relative inline-flex items-center overflow-hidden rounded bg-indigo-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-indigo-500 mt-3"
+                className="group relative inline-flex items-center overflow-hidden rounded bg-green-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-green-500 mt-3"
                 onClick={() => exportToExcel()}
             >
                 <span className="absolute -end-full transition-all group-hover:end-4">
@@ -228,7 +287,7 @@ export default function Equipments() {
 
                 </span>
 
-                <span className="text-sm font-medium transition-all group-hover:me-4"> Download </span>
+                <span className="text-sm font-medium transition-all group-hover:me-4"> Exporter </span>
             </button>
         </div>
 

@@ -5,6 +5,8 @@ import AtelierSlice from "./AtelierSlice";
 import EquipmentSlice from "./EquipmentSlice";
 import SingleEquipmentSlice from "./SingleEquipmentSlice";
 import SingleEmployee from "./SingleEmployee";
+import PositionSlice from "./PositionSlice";
+import NotificationSlice from "./NotificationSlice";
 
 
 const store = configureStore({
@@ -14,8 +16,9 @@ const store = configureStore({
         employees: EmployeeSlice,
         ateliers: AtelierSlice,
         equipments: EquipmentSlice,
-        singleEquipment: SingleEquipmentSlice
-        
+        singleEquipment: SingleEquipmentSlice,
+        positions : PositionSlice,
+        notification : NotificationSlice
     }
 })
 

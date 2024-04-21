@@ -4,7 +4,7 @@ const atelierModels = require('../Models/AtelierModels')
 
 // /api/allatelier
 
-router.get('/api/allAtelier',async (req,res)=>{
+router.get('/api/allAtelier', async (req, res) => {
     try {
         const atelier = await atelierModels.getAllAtelier()
         res.status(201).json(atelier)
@@ -15,7 +15,7 @@ router.get('/api/allAtelier',async (req,res)=>{
 
 // /api/atelier/:id
 // http://localhost:3001/atelier/api/atelier/1
-router.get('/api/atelier/:id',async (req,res)=>{
+router.get('/api/atelier/:id', async (req, res) => {
     try {
         const id = req.params.id
         const atelier = await atelierModels.getAtelierByID(id)
@@ -26,10 +26,10 @@ router.get('/api/atelier/:id',async (req,res)=>{
     }
 })
 // /api/createAtelier
-router.post('/api/createAtelier',async (req,res)=>{
+router.post('/api/createAtelier', async (req, res) => {
     try {
         const data = {
-            atelier_name : req.body.atelier_name
+            atelier_name: req.body.atelier_name
         }
         const atelier = await atelierModels.createAnAtelier(data)
         res.status(200).json(atelier)
@@ -39,7 +39,7 @@ router.post('/api/createAtelier',async (req,res)=>{
     }
 })
 // /api/atelier/:id
-router.delete('/api/atelier/:id',async (req,res)=>{
+router.delete('/api/atelier/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const atelier = await atelierModels.deleteAnAtelier(id)
@@ -50,11 +50,11 @@ router.delete('/api/atelier/:id',async (req,res)=>{
     }
 })
 // /api/atelier/:id
-router.put('/api/atelier/:id',async (req,res)=>{
+router.put('/api/atelier/:id', async (req, res) => {
     try {
         const id = req.params.id
         const data = {
-            atelier_name : req.body.atelier_name
+            atelier_name: req.body.atelier_name
         }
         const atelier = await atelierModels.updateAnAtelier(data, id)
         res.status(200).json(atelier)
