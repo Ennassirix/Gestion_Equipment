@@ -31,7 +31,7 @@ app.use('/equipment', equipmentRouter);
 app.use("/atelier", atelierRouter);
 
 // position Router :
-app.use('/position',positionRouter)
+app.use('/position', positionRouter)
 
 
 app.listen(port, () => {

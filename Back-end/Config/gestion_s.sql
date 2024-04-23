@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2024 at 09:22 PM
+-- Generation Time: Apr 24, 2024 at 12:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `suivi`
+-- Database: `gestion_s`
 --
 
 -- --------------------------------------------------------
@@ -28,16 +28,17 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `atelier` (
-  `atelier_name` varchar(255) NOT NULL,
-  `atelier_id` int(11) NOT NULL
+  `atelier_id` int(11) NOT NULL,
+  `atelier_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `atelier`
 --
 
-INSERT INTO `atelier` (`atelier_name`, `atelier_id`) VALUES
-('dev', 4);
+INSERT INTO `atelier` (`atelier_id`, `atelier_name`) VALUES
+(1, 'DEV'),
+(2, 'ME');
 
 -- --------------------------------------------------------
 
@@ -46,18 +47,18 @@ INSERT INTO `atelier` (`atelier_name`, `atelier_id`) VALUES
 --
 
 CREATE TABLE `employees` (
-  `employee_name` varchar(255) NOT NULL,
-  `employee_id` int(11) NOT NULL
+  `employee_id` int(11) NOT NULL,
+  `employee_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`employee_name`, `employee_id`) VALUES
-('ayoub', 1),
-('samis', 2),
-('bakale', 3);
+INSERT INTO `employees` (`employee_id`, `employee_name`) VALUES
+(1, 'ayoub'),
+(16, 'youssef'),
+(17, 'a');
 
 -- --------------------------------------------------------
 
@@ -81,20 +82,7 @@ CREATE TABLE `equipment` (
 --
 
 INSERT INTO `equipment` (`equipment_id`, `code`, `ref`, `equipment_name`, `quantity_available`, `created_date`, `updated_date`, `position_name`) VALUES
-(21, '5sd5', 'ds5d5', 'cable', 12, '2024-04-16', '2024-04-21', 'A1'),
-(59, 'ff1401', '1259d6987z', 'projecteur', 3, '2024-04-21', '2024-04-21', 'B1');
-
---
--- Triggers `equipment`
---
-DELIMITER $$
-CREATE TRIGGER `after_equipment_update` BEFORE UPDATE ON `equipment` FOR EACH ROW BEGIN
-    IF OLD.quantity_available <> new.quantity_available THEN
-        SET NEW.updated_date = NOW(); -- Use NOW() or CURRENT_TIMESTAMP to set current timestamp
-    END IF;
-END
-$$
-DELIMITER ;
+(1, '1234a', '321c654v987', 'projecteur', 10, '2024-04-23', '2024-04-23', 'A1');
 
 -- --------------------------------------------------------
 
@@ -103,22 +91,16 @@ DELIMITER ;
 --
 
 CREATE TABLE `position` (
-  `position_name` varchar(255) NOT NULL,
-  `position_id` int(11) NOT NULL
+  `position_id` int(11) NOT NULL,
+  `position_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `position`
 --
 
-INSERT INTO `position` (`position_name`, `position_id`) VALUES
-('A1', 2),
-('A2', 3),
-('B1', 6),
-('B2', 7),
-('C3', 8),
-('C4', 49),
-('A3', 50);
+INSERT INTO `position` (`position_id`, `position_name`) VALUES
+(1, 'A1');
 
 -- --------------------------------------------------------
 
@@ -139,6 +121,13 @@ CREATE TABLE `trackequipment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `trackequipment`
+--
+
+INSERT INTO `trackequipment` (`id`, `code`, `ref`, `equipment_name`, `employee_name`, `atelier_name`, `position_name`, `quantity`, `created_date`) VALUES
+(1, '1234a', '321c654v987', 'cable', 'ayoub', 'DEV', 'A1', 2, '2024-04-23');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -147,13 +136,15 @@ CREATE TABLE `trackequipment` (
 --
 ALTER TABLE `atelier`
   ADD PRIMARY KEY (`atelier_name`),
-  ADD KEY `atelier_id` (`atelier_id`);
+  ADD KEY `atelier_id` (`atelier_id`),
+  ADD KEY `atelier_name` (`atelier_name`);
 
 --
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`employee_name`),
+  ADD UNIQUE KEY `employee_name` (`employee_name`),
   ADD KEY `employee_id` (`employee_id`);
 
 --
@@ -189,31 +180,31 @@ ALTER TABLE `trackequipment`
 -- AUTO_INCREMENT for table `atelier`
 --
 ALTER TABLE `atelier`
-  MODIFY `atelier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `atelier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `equipment`
 --
 ALTER TABLE `equipment`
-  MODIFY `equipment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `equipment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `position`
 --
 ALTER TABLE `position`
-  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `trackequipment`
 --
 ALTER TABLE `trackequipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -223,16 +214,16 @@ ALTER TABLE `trackequipment`
 -- Constraints for table `equipment`
 --
 ALTER TABLE `equipment`
-  ADD CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`position_name`) REFERENCES `position` (`position_name`);
+  ADD CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`position_name`) REFERENCES `position` (`position_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `trackequipment`
 --
 ALTER TABLE `trackequipment`
-  ADD CONSTRAINT `trackequipment_ibfk_1` FOREIGN KEY (`code`) REFERENCES `equipment` (`code`),
-  ADD CONSTRAINT `trackequipment_ibfk_2` FOREIGN KEY (`employee_name`) REFERENCES `employees` (`employee_name`),
-  ADD CONSTRAINT `trackequipment_ibfk_3` FOREIGN KEY (`atelier_name`) REFERENCES `atelier` (`atelier_name`),
-  ADD CONSTRAINT `trackequipment_ibfk_4` FOREIGN KEY (`position_name`) REFERENCES `position` (`position_name`);
+  ADD CONSTRAINT `trackequipment_ibfk_1` FOREIGN KEY (`code`) REFERENCES `equipment` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `trackequipment_ibfk_2` FOREIGN KEY (`employee_name`) REFERENCES `employees` (`employee_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `trackequipment_ibfk_3` FOREIGN KEY (`atelier_name`) REFERENCES `atelier` (`atelier_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `trackequipment_ibfk_4` FOREIGN KEY (`position_name`) REFERENCES `position` (`position_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

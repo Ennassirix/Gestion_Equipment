@@ -56,10 +56,10 @@ async function deleteAnAtelier(id) {
 async function updateAnAtelier(data, id) {
     try {
         const { atelier_name } = data
-        const [rows] = pool.query('UPDATE atelier SET atelier_name = ? WHERE atelier_id = ?', [atelier_name, id])
+        const [rows] = await pool.query('UPDATE atelier SET atelier_name = ? WHERE atelier_id = ?', [atelier_name, id])
         return rows
     } catch (error) {
-        console.log('Failed to update an atelier');
+        console.log('Failed to update an atelier m');
     }
 }
 module.exports = {

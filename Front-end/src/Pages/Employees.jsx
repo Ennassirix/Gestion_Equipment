@@ -20,19 +20,20 @@ export default function Employees() {
     const navigate = useNavigate()
     const handelSubmit = async e => {
         e.preventDefault()
-        if (name === '') {
+        if (name === ' ') {
             setError('le champ du nom ne doit pas être vide')
             setErrorPopUp(true)
-        }else {
+        } else {
             try {
-                const res = await axios.post('http://localhost:3001/employees/api/createEmployee', { employee_name: name})
+                const res = await axios.post('http://localhost:3001/employees/api/createEmployee', { employee_name: name })
                 if (res.status === 200) {
                     dispatch(fetchEmployeeData());
                     setShowPopUp(true)
                     setErrorPopUp(false)
                     setName('')
                     setLastName('')
-                    navigate('/employees')
+                    // navigate('/employees')
+                    dispatch(fetchEmployeeData())
                 } else {
                     if (res.status === 500) {
                         setError('le nom ne doit pas être dupliqué')
@@ -95,7 +96,7 @@ export default function Employees() {
                         />
                     </div>
                 </div>
-                
+
                 <div className="mt-6 flex items-center justify-start gap-x-6">
                     <button
                         type="reset"
