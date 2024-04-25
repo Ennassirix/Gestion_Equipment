@@ -18,7 +18,8 @@ const store = configureStore({
         equipments: EquipmentSlice,
         singleEquipment: SingleEquipmentSlice,
         positions : PositionSlice,
-        notification : NotificationSlice
+        notification: NotificationSlice
+       
     }
 })
 

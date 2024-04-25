@@ -34,7 +34,7 @@ async function updateQuantity(data, id) {
     try {
         const { quantity_available } = data
         const [rows] = await pool.query('UPDATE equipment SET quantity_available = quantity_available + ? WHERE equipment_id = ? ',
-            [quantity_available, id ])
+            [quantity_available, id])
         return rows.affectedRows
     } catch (error) {
         console.log('Failed to update qts m')
@@ -56,10 +56,8 @@ async function deleteAnEquipment(id) {
 async function getAllEquipment() {
     try {
         const [rows] = await pool.query(`
-            SELECT *, DATE_FORMAT(e.updated_date, '%Y-%m-%d') AS formatted_date
-            FROM equipment e 
-            JOIN position p ON e.position_name = p.position_name 
-            ORDER BY e.quantity_available ASC
+            SELECT *, DATE_FORMAT(updated_date, '%Y-%m-%d') AS formatted_date
+            FROM equipment ORDER BY quantity_available ASC LIMIT 10
         `);
 
         // Convert the updated_date string to Date objects and format them
@@ -76,6 +74,8 @@ async function getAllEquipment() {
         throw error;
     }
 }
+
+
 
 
 // get by id
@@ -99,7 +99,7 @@ async function monitorEquipmentQuantity() {
         equipments.forEach(async equipment => {
             if (equipment.quantity_available <= 5) {
                 // Send notification
-                notifications.push({ id: equipment.equipment_id, equipment_name: equipment.equipment_name, quantity_available: equipment.quantity_available,updated_date : equipment.updated_date });
+                notifications.push({ id: equipment.equipment_id, equipment_name: equipment.equipment_name, quantity_available: equipment.quantity_available, updated_date: equipment.updated_date });
             }
         });
     } catch (error) {
@@ -109,6 +109,17 @@ async function monitorEquipmentQuantity() {
 }
 
 
+
+// get by code
+
+async function getByCode(code) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM equipment WHERE code = ?', [code])
+        return rows
+    } catch (error) {
+        console.error('Error monitoring equipment quantity:', error);
+    }
+}
 
 
 
@@ -121,5 +132,6 @@ module.exports = {
     getAllEquipment,
     getAnEquipmentByID,
     monitorEquipmentQuantity,
-    updateQuantity
+    updateQuantity,
+    getByCode
 }

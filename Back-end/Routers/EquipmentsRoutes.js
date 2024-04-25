@@ -5,8 +5,8 @@ const equipmentModel = require('../Models/EquipmentsModels')
 // api/getAllEquipments
 route.get('/api/getAllEquipments', async (req, res) => {
     try {
-
-        const equipments = await equipmentModel.getAllEquipment()
+        const { pageNumber, pageSize } = req.query
+        const equipments = await equipmentModel.getAllEquipment(pageNumber, pageSize)
         res.status(200).json(equipments);
     } catch (error) {
         res.status(500).json('Failed to get all equipments')
@@ -96,5 +96,18 @@ route.get('/api/notification', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+// get by code
+
+route.get('/api/byCode', async (req, res) => {
+    try {
+        const { code } = req.body
+        const equipment = await equipmentModel.getByCode(code)
+        res.status(200).json(equipment)
+    } catch (error) {
+        console.error('Error triggering equipment quantity monitoring:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
 
 module.exports = route;
